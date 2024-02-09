@@ -42,7 +42,7 @@ Utrzymuj informację o sumie wydobytego surowca dla każdego jego typu w ciągu 
 
 Wyniki powinny zawierać, następujące kolumny:
 - `ore` - typ surowca
-- `number_sum` - suma wydobytego surowca zarejestrowana w ciągu ostatniej minuty.
+- `sumNumber` - suma wydobytego surowca zarejestrowana w ciągu ostatniej minuty.
 
 ## Zadanie 2
 Wykrywaj przypadki, w których napotkano diamenty o liczności większej niż 6 na głębokości większej niż 12.
@@ -64,10 +64,7 @@ Wyniki powinny zawierać, następujące kolumny:
 - `its` - czas rejestracji.
 
 ## Zadanie 4
-Dla dwóch poziomów głębokości 
-- powyżej 20
-- poniżej 10
-utrzymywane są statystyki dotyczące wydobycia zarejestrowanego w ciągu ostatniej minuty dla każdego z typów surowca.
+Dla dwóch poziomów głębokości: (1) dużej — większej niż 20 i (2) małej — mniej niż 10, utrzymywane są statystyki dotyczące wydobycia zarejestrowanego w ciągu ostatniej minuty dla każdego z typów surowca.
 
 Utrzymuj porównanie tych samych surowców dla obu poziomów głębokości. 
 
@@ -77,7 +74,7 @@ Wyniki powinny zawierać, następujące kolumny:
 - `sumNumberHell` - suma surowca wydobytego na dużej głębokości.
 
 ## Zadanie 5
-Znajduj serie wydobycia dowolnego rodzaju surowca zakończoną wydobyciem diamentów o liczności większej niż 5. Maksymalny czas serii nie może przekroczyć 30 sekund.
+Znajduj serie wydobycia dowolnego rodzaju surowca zakończone wydobyciem diamentów o liczności większej niż 5. Maksymalny czas serii nie może przekroczyć 30 sekund.
 
 Zadbaj o to, aby znalezione serie się nie pokrywały.
 
@@ -85,8 +82,8 @@ Wyniki powinny zawierać, następujące kolumny:
 - `ore` - rodzaj surowca zdarzenia początkowego
 - `depth` - głębokość wydobycia dla zdarzenia początkowego
 - `number` - liczność surowca zdarzenia początkowego
-- `start_ets` - czas wydobycia zdarzenia początkowego
-- `end_ets` - czas wydobycia diamentów kończącego serię
+- `startEts` - czas wydobycia zdarzenia początkowego
+- `endEts` - czas wydobycia diamentów kończącego serię
 
 ## Zadanie 6
 Znajduj trójki zdarzeń wydobycia tego samego surowca, każdorazowo o wielkości powyżej 5, przy czym każde kolejne wydobycie będzie większe od poprzedniego. Odrzuć takie przypadki, w trakcie których wydobyto surowiec innego rodzaju.
@@ -102,6 +99,6 @@ Trzy wydobycia trzech różnych surowców są określane przez graczy Big3.
 Znajduj przypadki wystąpienia dwóch następujących po sobie Big3. 
 
 Wyniki powinny zawierać, następujące kolumny:
-- `start_its` - moment rejestracji pierwszego zdarzenia z pierwszego Big3
-- `end_its` - moment rejestracji ostatniego zdarzenia z drugiego Big3.
-- `sum_number` - sumę wydobytego surowca ze wszystkich sześciu zdarzeń.
+- `startIts` - moment rejestracji pierwszego zdarzenia z pierwszego Big3
+- `endIts` - moment rejestracji ostatniego zdarzenia z drugiego Big3.
+- `sumNumber` - sumę wydobytego surowca ze wszystkich sześciu zdarzeń.
