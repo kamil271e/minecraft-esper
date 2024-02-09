@@ -20,7 +20,7 @@ Dane uzupełnione są o dwie etykiety czasowe zaokrąglone do jednej sekundy.
 Atrybuty w każdym zdarzeniu zgodnym ze schematem `MinecraftEvent` mają następujące znaczenie:
 
 * `ore` - rodzaj surowca należący do zbioru ("coal", "iron", "gold", "diamond", "emerald")
-* `depth` - głębokość (współrzędna Y w grze), z której wydobyto surowiec, zakres od 1 do 35
+* `depth` - głębokość, z której wydobyto surowiec, zakres od 1 do 35
 * `number` - rozmiar, zakres od 1 do 9
 * `ets` - czas wydobycia surowca
 * `its` - czas rejestracji zdarzenia w systemie.
@@ -42,7 +42,7 @@ Utrzymuj informację o sumie wydobytego surowca dla każdego jego typu w ciągu 
 
 Wyniki powinny zawierać, następujące kolumny:
 - `ore` - typ surowca
-- `ore_sum` - suma wydobytego surowca zarejestrowana w ciągu ostatniej minuty.
+- `number_sum` - suma wydobytego surowca zarejestrowana w ciągu ostatniej minuty.
 
 ## Zadanie 2
 Wykrywaj przypadki, w których napotkano diamenty o liczności większej niż 6 na głębokości większej niż 12.
