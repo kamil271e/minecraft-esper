@@ -66,7 +66,7 @@ public class EsperClient {
                 String record = Format.toJson()
                         .set("ore", () -> ores[faker.number().numberBetween(0, ores.length)])
                         .set("depth", () -> String.valueOf(faker.number().numberBetween(1, 36)))
-                        .set("number", () -> String.valueOf(faker.number().numberBetween(1, 10)))
+                        .set("amount", () -> String.valueOf(faker.number().numberBetween(1, 10)))
                         .set("ets", eTimestamp::toString)
                         .set("its", iTimestamp::toString)
                         .build().generate();
@@ -83,8 +83,8 @@ public class EsperClient {
         EPCompiled epCompiled;
         try {
             epCompiled = compiler.compile("""
-                    @public @buseventtype create json schema MinecraftEvent(ore string, depth int, number int, ets string, its string);
-                    @name('answer') SELECT ore, depth, number, ets, its
+                    @public @buseventtype create json schema MinecraftEvent(ore string, depth int, amount int, ets string, its string);
+                    @name('answer') SELECT ore, depth, amount, ets, its
                           from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec)""", compilerArgs);
         }
         catch (EPCompileException ex) {
