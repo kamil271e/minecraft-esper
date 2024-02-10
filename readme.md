@@ -1,6 +1,6 @@
 # Charakterystyka danych 
 
-*Wyposażeni w odpowiednie narzędzia schodzimy pod ziemię, na odpowiednią głębokość, w celu znalezienia drogocennych rud występujących w grupach o różnym rozmiarze.*
+*Wyposażeni w odpowiednie narzędzia schodzimy pod ziemię, na odpowiednią głębokość, w celu znalezienia drogocennych materiałów występujących w grupach o różnym rozmiarze.*
 
 W strumieniu pojawiają się zdarzenia zgodne ze schematem `MinecraftEvent`.
 
