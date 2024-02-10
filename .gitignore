@@ -1,12 +1,12 @@
 # Katalogi generowane przez IntelliJ IDEA
-.idea/
+# .idea/
 
 # Katalogi wygenerowane podczas kompilacji
 out/
 target/
 
 # Pliki konfiguracyjne
-*.iml
+# *.iml
 *.ipr
 *.iws
 

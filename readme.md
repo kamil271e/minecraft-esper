@@ -32,10 +32,11 @@ Opracuj rozwiązania poniższych zadań.
 * Ostatnie polecenie będące ostatecznym rozwiązaniem zadania musi 
   * być poleceniem `select` 
   * posiadającym etykietę `answer`, przykładowo:
-  ```aidl
-    @name('answer') SELECT ore, depth, number, ets, its
-    from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec)
-  ```
+
+```aidl
+  @name('answer') SELECT ore, depth, number, ets, its
+  FROM MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec)
+```
 
 ## Zadanie 1
 Utrzymuj informację o sumie wydobytego surowca dla każdego jego typu w ciągu ostatniej minuty.
