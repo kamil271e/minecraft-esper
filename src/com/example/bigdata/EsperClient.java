@@ -32,16 +32,19 @@ public class EsperClient {
 
         Configuration config = new Configuration();
         String sampleQuery = """
-            @public @buseventtype create json schema MinecraftEvent(ore string, depth int, amount int, ets string, its string);
             @name('answer') SELECT ore, depth, amount, ets, its
                   from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec)
             """;
         String task1Query = """
-            @public @buseventtype create json schema MinecraftEvent(ore string, depth int, amount int, ets string, its string);
-            @name('answer') SELECT ore, amount, sum(amount) as sumAmount
-                  from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec) where ore='diamond'
+            @name('answer') SELECT ore, sum(amount) as sumAmount
+                  from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec) GROUP BY ore
             """;
-        EPCompiled epCompiled = getEPCompiled(config, task1Query);
+        String task2Query = """
+            @name('answer') SELECT ore, amount, depth, ets, its
+                  from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec) 
+                  WHERE amount > 6 AND depth > 12 AND ore='diamond'
+            """;
+        EPCompiled epCompiled = getEPCompiled(config, task2Query);
 
         // Connect to the EPRuntime server and deploy the statement
         EPRuntime runtime = EPRuntimeProvider.getRuntime("http://localhost:port", config);
@@ -63,18 +66,18 @@ public class EsperClient {
             }
         });
 
-        taskRunner(noOfRecordsPerSec, 120, runtime);
+        taskRunner(10, 120, runtime);
 
     }
 
     private static EPCompiled getEPCompiled(Configuration config, String query) {
         CompilerArguments compilerArgs = new CompilerArguments(config);
-
+        String jsonSchema = "@public @buseventtype create json schema MinecraftEvent(ore string, depth int, amount int, ets string, its string);";
         // Compile the EPL statement
         EPCompiler compiler = EPCompilerProvider.getCompiler();
         EPCompiled epCompiled;
         try {
-            epCompiled = compiler.compile(query, compilerArgs);
+            epCompiled = compiler.compile(jsonSchema + query, compilerArgs);
         }
         catch (EPCompileException ex) {
             // handle exception here
