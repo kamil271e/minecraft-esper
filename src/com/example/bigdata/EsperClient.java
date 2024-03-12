@@ -40,11 +40,18 @@ public class EsperClient {
                   from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec) GROUP BY ore
             """;
         String task2Query = """
-            @name('answer') SELECT ore, amount, depth, ets, its
+            @name('answer') SELECT amount, depth, ets, its
                   from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec) 
                   WHERE amount > 6 AND depth > 12 AND ore='diamond'
             """;
-        EPCompiled epCompiled = getEPCompiled(config, task2Query);
+        String task3Query = """
+            @name('answer') SELECT ore, amount, depth, ets, its
+                  FROM MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec) 
+                  GROUP BY ore
+                  HAVING amount >= 1.5 * AVG(amount)
+            """;
+
+        EPCompiled epCompiled = getEPCompiled(config, task3Query);
 
         // Connect to the EPRuntime server and deploy the statement
         EPRuntime runtime = EPRuntimeProvider.getRuntime("http://localhost:port", config);
@@ -66,7 +73,7 @@ public class EsperClient {
             }
         });
 
-        taskRunner(10, 120, runtime);
+        taskRunner(2, 120, runtime);
 
     }
 
