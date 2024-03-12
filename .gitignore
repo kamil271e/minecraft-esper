@@ -17,3 +17,6 @@ build/
 # Pliki konfiguracyjne dla systemów operacyjnych
 *.DS_Store
 Thumbs.db
+
+# Logi
+*.log
