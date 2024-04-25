@@ -33,7 +33,7 @@ public class EsperClient {
         Configuration config = new Configuration();
         String sampleQuery = """
             @name('answer') SELECT ore, depth, amount, ets, its
-                  from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec)
+                  from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec)
             """;
         String task1Query = """
             @name('answer') SELECT ore, sum(amount) as sumAmount
@@ -41,8 +41,7 @@ public class EsperClient {
             """;
         String task2Query = """
             @name('answer') SELECT amount, depth, ets, its
-                  from MinecraftEvent#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 3 sec) 
-                  WHERE amount > 6 AND depth > 12 AND ore='diamond'
+                  from MinecraftEvent(amount > 6 AND depth > 12 AND ore='diamond');
             """;
         String task3Query = """
             @name('answer') SELECT ore, amount, depth, ets, its
@@ -51,7 +50,83 @@ public class EsperClient {
                   HAVING amount >= 1.5 * AVG(amount)
             """;
 
-        EPCompiled epCompiled = getEPCompiled(config, task3Query);
+        String task4Query = """
+            @name('answer')
+            SELECT hll.ore, SUM(hv.amount) as sumAmountHeaven, SUM(hll.amount) as sumAmountHell
+            FROM MinecraftEvent(depth < 10)#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec) AS hll,
+                MinecraftEvent(depth > 20)#ext_timed(java.sql.Timestamp.valueOf(its).getTime(), 60 sec) AS hv
+            WHERE hv.ore = hll.ore
+            GROUP BY hll.ore;
+        """;
+
+        String task5Query = """
+             @name('answer') select s[0].ore as ore, s[0].depth as depth, s[0].amount as amount, 
+             s[0].its as startEts, e.its as endEts from
+             pattern[ every (s=MinecraftEvent until e=MinecraftEvent(amount > 5 and ore = 'diamond')
+             where timer:within(30 seconds))];
+        """;
+
+//        String task6Query = """
+//            @name('answer') SELECT *
+//            FROM MinecraftEvent
+//            MATCH_RECOGNIZE (
+//                PARTITION BY ore
+//                MEASURES
+//                    e1.ore AS ore
+//                    e1.amount AS amount1,
+//                    LAST(e2.amount) AS amount2,
+//                    LAST(e3.amount) AS amount3,
+//                PATTERN (e1 e2 e3)
+//                DEFINE
+//                    e1 as e1.amount > 5,
+//                    e2 AS e2.amount ! PREV(e1.amount),
+//                    e3 AS e3.amount > PREV(e2.amount)
+//            )
+//        """;
+
+//        String task6Query = """
+//                @name('answer') select e1.ore, e2.ore, e3.ore, e1.amount, e2.amount, e3.amount, e1.its, e2.its, e3.its
+//                from pattern [ every e1=MinecraftEvent(amount>5) -> ( e2=MinecraftEvent(ore=e1.ore and amount > e1.amount) and not MinecraftEvent(ore!=e1.ore or amount <= e1.amount) ) -> ( e3=MinecraftEvent(ore=e2.ore and amount > e2.amount) and not MinecraftEvent(ore!=e2.ore or amount <= e2.amount) ) ];
+//                """;
+
+        String task6Query = """
+                @name('answer') select ore, amount1, amount2, amount3 from MinecraftEvent
+                                match_recognize (
+                                measures
+                                    f.ore as ore,
+                                    f.amount as amount1,
+                                    s.amount as amount2,
+                                    t.amount as amount3
+                                after match skip to next row
+                                pattern ( x f s t )
+                                define
+                                     f as f.amount > 5,
+                                     s as s.amount > f.amount,
+                                     t as t.amount > s.amount
+                                )
+                """;
+
+        String task7Query = """
+                @name('answer') select startIts, endIts, sumAmount
+                                from MinecraftEvent
+                                match_recognize (
+                                measures
+                                    f1.amount + f2.amount + f3.amount + s1.amount + s2.amount + s3.amount as sumAmount,
+                                    f1.its as startIts,
+                                    s3.its as endIts
+                                pattern (x f1 f2 f3 y* s1 s2 s3)
+                                define
+                                    f1 as f1.ore != prev(f1.ore),
+                                    f2 as f2.ore != f1.ore,
+                                    f3 as (f3.ore != f2.ore and f3.ore != f1.ore),
+                                    s1 as s1.ore != prev(s1.ore),
+                                    s2 as s2.ore != s1.ore,
+                                    s3 as (s3.ore != s2.ore and s3.ore != s1.ore)
+                                )
+            """;
+
+
+        EPCompiled epCompiled = getEPCompiled(config, task6Query);
 
         // Connect to the EPRuntime server and deploy the statement
         EPRuntime runtime = EPRuntimeProvider.getRuntime("http://localhost:port", config);
@@ -73,7 +148,7 @@ public class EsperClient {
             }
         });
 
-        taskRunner(2, 120, runtime);
+        taskRunner(1000, 120, runtime);
 
     }
 
